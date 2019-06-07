@@ -16,13 +16,26 @@ var GAP = 50;
 var TIMES_VERTICAL_GAP = 10;
 var PLAYER_COLOR = 'rgba(255, 0, 0, 1)';
 
-// определие цвета других игроков
+
+/**
+* Определяем цвета гистограммы для других игроков
+*
+* @return {string} значение цвета в цветовом пространстве hsl.
+*/
 var anotherColor = function () {
   var color = 'hsl(240, ' + 100 * Math.random() + '%, 50%)';
   return color;
 };
 
-// конструктор облаков
+/**
+* Создает облако
+*
+* @constuctor
+* @param {object} ctx - контекст canvas.
+* @param {number} cloudX - координата X.
+* @param {number} cloudY - координата Y.
+* @param {string} cloudColor - значение цвета в цветовом пространстве rgba.
+*/
 var renderCloud = function (ctx, cloudX, cloudY, cloudColor) {
   ctx.fillStyle = cloudColor;
   ctx.fillRect(cloudX, cloudY, CLOUD_WIDTH, CLOUD_HEIGHT);
@@ -31,21 +44,41 @@ var renderCloud = function (ctx, cloudX, cloudY, cloudColor) {
   ctx.fillRect(cloudX, cloudY, CLOUD_WIDTH, CLOUD_HEIGHT);
 };
 
-// конструктор текста
+/**
+* Создает текст в облаке
+*
+* @constuctor
+* @param {object} ctx - контекст canvas.
+* @param {string} textContent - текст, который необходимо отобразить.
+* @param {number} textX - координата X.
+* @param {number} textY - координата Y.
+*/
 var renderCloudeText = function (ctx, textContent, textX, textY) {
   ctx.fillStyle = FONT_STYLE;
   ctx.font = FONT_PROPERTY;
   ctx.fillText(textContent, textX, textY);
 };
 
-// конструктор имен игроков
+/**
+* Создает имена игроков
+*
+* @constuctor
+* @param {object} ctx - контекст canvas.
+* @param {array} names - массив с именами игроков.
+*/
 var renderPlayersNames = function (ctx, names) {
   for (var i = 0; i < names.length; i++) {
     renderCloudeText(ctx, names[i], NAME_X + (BAR_WIDTH + GAP) * i, NAME_Y);
   }
 };
 
-// конструктор времен прохождения для каждого игрока
+/**
+* Создает времена прохождения для каждого игрока.
+*
+* @constuctor
+* @param {object} ctx - контекст canvas.
+* @param {array} times - массив времен для каждого из игроков.
+*/
 var renderPlayersTimes = function (ctx, times) {
   var maxTime = getMaxTime(times);
   for (var i = 0; i < times.length; i++) {
@@ -54,6 +87,12 @@ var renderPlayersTimes = function (ctx, times) {
 };
 
 // определение максимального времени
+/**
+* Определяем максимальное время прохождения игры.
+*
+* @param {array} times - массив времен для каждого из игроков.
+* @return {numder} maxTime - возвращает максимальное время прохождения игры.
+*/
 var getMaxTime = function (times) {
   var maxTime = 0;
   for (var i = 0; i < times.length; i++) {
@@ -64,7 +103,14 @@ var getMaxTime = function (times) {
   return maxTime;
 };
 
-// конструктор гистограммы
+/**
+* Создает гистограмму.
+*
+* @constuctor
+* @param {object} ctx - контекст canvas.
+* @param {array} names - массив с именами игроков.
+* @param {array} times - массив времен для каждого из игроков.
+*/
 var renderPlayerBar = function (ctx, names, times) {
   var maxTime = getMaxTime(times);
   for (var i = 0; i < times.length; i++) {
@@ -78,6 +124,14 @@ var renderPlayerBar = function (ctx, names, times) {
   }
 };
 
+/**
+* Создает облако со статистикой прохождения игры.
+*
+* @constuctor
+* @param {object} ctx - контекст canvas.
+* @param {array} names - массив с именами игроков.
+* @param {array} times - массив времен для каждого из игроков.
+*/
 window.renderStatistics = function (ctx, names, times) {
   renderCloud(ctx, 110, 20, 'rgba(0, 0, 0, 0.7)');
   renderCloud(ctx, 100, 10, 'rgba(255, 255, 255, 1)');
