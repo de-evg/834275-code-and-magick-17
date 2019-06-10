@@ -48,22 +48,17 @@ setup.classList.remove('hidden');
  *
  * @param {Array} names - массив имен.
  * @param {Array} surnames - массив фамилий.
- * @param {number} numberOfPlayers - необходимое количество игроков.
- * @param {number} i - номер итерации.
  * @return {Array} playersNames - возвращает массив необходимых имен игроков.
  */
-var getNames = function (names, surnames, numberOfPlayers, i) {
+var getNames = function (names, surnames) {
   var allNames = [];
-  var playersNames = [];
 
-  names.forEach(function (item, i, arr) {
+  names.forEach(function (item, i) {
     var j = Math.floor(names.length * Math.random());
     allNames[i] = item + ' ' + surnames[j];
   });
 
-  playersNames[i] = getElementFromArray(allNames);
-
-  return playersNames;
+  return allNames;
 };
 
 /**
@@ -75,7 +70,7 @@ var getNames = function (names, surnames, numberOfPlayers, i) {
 var getElementFromArray = function (someArray) {
   var i = Math.floor(someArray.length * Math.random());
   return someArray[i];
-}
+};
 
 /**
  * Создает массив уникальных волшебников
@@ -89,7 +84,7 @@ var getElementFromArray = function (someArray) {
 var getWizards = function (colorCoats, colorEyes, numberOfPlayers, i) {
   var wizards = [];
   var wizard = {
-    name: wizardsNames[i],
+    name: allWizardsNames[i],
     coatColor: getElementFromArray(colorCoats),
     eyesColor: getElementFromArray(colorEyes)
   };
@@ -102,11 +97,13 @@ var similarWizardTemplate = document.querySelector('#similar-wizard-template')
     .content
     .querySelector('.setup-similar-item');
 
+var allWizardsNames = getNames(FIRST_NAMES, LAST_NAMES, NUMBER_OF_PLAYERS, i);
+var playersNames = [];
 for (var i = 0; i < NUMBER_OF_PLAYERS; i++) {
-  var wizardsNames = getNames(FIRST_NAMES, LAST_NAMES, NUMBER_OF_PLAYERS, i);
+  playersNames[i] = getElementFromArray(allWizardsNames);
   var wizards = getWizards(COAT_COLORS, EYES_COLORS, NUMBER_OF_PLAYERS, i);
   var wizardElement = similarWizardTemplate.cloneNode(true);
-  wizardElement.querySelector('.setup-similar-label').textContent = wizardsNames[i];
+  wizardElement.querySelector('.setup-similar-label').textContent = allWizardsNames[i];
   wizardElement.querySelector('.wizard-coat').style.fill = wizards[i].coatColor;
   wizardElement.querySelector('.wizard-eyes').style.fill = wizards[i].eyesColor;
   similarListElement.appendChild(wizardElement);
