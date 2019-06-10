@@ -184,10 +184,11 @@
   var fireballSize = 22;
 
   /**
-  * Задает скорость фаербола.
-  *
-  * @param {number} left - направление полета фаербола.
-  */
+   * Задает скорость фаербола.
+   *
+   * @param {number} left - направление полета фаербола.
+   * @return {number} - возвращает скорость фаербола
+   */
   var getFireballSpeed = function (left) {
     return left ? 5 : 2;
   }
@@ -195,28 +196,31 @@
   var wizardWidth = 70;
 
   /**
-  * Задает высоту волшебника.
-  *
-  * @param {number} wizardWidth - ширина волшебника.
-  */
+   * Задает высоту волшебника.
+   *
+   * @param {number} wizardWidth - ширина волшебника.
+   * @return {number} - возвращает высоту волшебника
+   */
   var getWizardHeight = function (wizardWidth) {
     return 1.337 * wizardWidth;
   }
 
   /**
-  * Задает начальное положение волшебника по оси X
-  *
-  * @param {number} width - ширина игрового поля.
-  */
+   * Задает начальное положение волшебника по оси X
+   *
+   * @param {number} width - ширина игрового поля.
+   * @return {number} - возвращает значение начальной координаты по оси X
+   */
   var getWizardX = function (width) {
     return width / 2 - wizardWidth / 2;
   }
 
-/**
-* Задает начальное положение волшебника по оси Y.
-*
-* @param {number} height - высота игрового поля.
-*/
+  /**
+   * Задает начальное положение волшебника по оси Y.
+   *
+   * @param {number} height - высота игрового поля.
+   * @return {number} - возвращает значение начальной координаты по оси Y
+   */
   var getWizardY = function (height) {
     return height * 1 / 3 - getWizardHeight(wizardWidth);
   }
