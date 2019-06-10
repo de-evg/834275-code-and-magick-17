@@ -1,9 +1,7 @@
 'use strict';
 
-var setup = document.querySelector('.setup');
-setup.classList.remove('hidden');
-
-var firstNames = [
+var NUMBER_OF_PLAYERS = 4;
+var FIRST_NAMES = [
   'Иван',
   'Хуан Себастьян',
   'Мария',
@@ -14,7 +12,7 @@ var firstNames = [
   'Вашингтон'
 ];
 
-var lastNames = [
+var LAST_NAMES = [
   'да Марья',
   'Верон',
   'Мирабелла',
@@ -25,7 +23,7 @@ var lastNames = [
   'Ирвинг'
 ];
 
-var coatColor = [
+var COAT_COLORS = [
   'rgb(101, 137, 164)',
   'rgb(241, 43, 107)',
   'rgb(146, 100, 161)',
@@ -34,7 +32,7 @@ var coatColor = [
   'rgb(0, 0, 0)'
 ];
 
-var eyesColor = [
+var EYES_COLORS = [
   'black',
   'red',
   'blue',
@@ -42,84 +40,71 @@ var eyesColor = [
   'green'
 ];
 
-var wizards = [];
-var NUMBER_OF_PLAYERS = 4;
+var setup = document.querySelector('.setup');
+setup.classList.remove('hidden');
 
 /**
  * Создает массив случайных имен и фамилий игроков
  *
- * @param {array} names - массив имен.
- * @param {array} surnames - массив фамилий.
+ * @param {Array} names - массив имен.
+ * @param {Array} surnames - массив фамилий.
  * @param {number} numberOfPlayers - необходимое количество игроков.
- * @return {array} playersNames - возвращает массив необходимых имен игроков.
+ * @param {number} i - номер итерации.
+ * @return {Array} playersNames - возвращает массив необходимых имен игроков.
  */
-var getNames = function (names, surnames, numberOfPlayers) {
+var getNames = function (names, surnames, numberOfPlayers, i) {
   var allNames = [];
   var playersNames = [];
-  for (var i = 0; i < firstNames.length; i++) {
-    var j = Math.floor(i * Math.random());
-    allNames[i] = firstNames[i] + ' ' + lastNames[j];
-  }
-  for (i = 0; i < numberOfPlayers; i++) {
-    j = Math.floor(allNames.length * Math.random());
-    playersNames[i] = allNames[j];
-  }
+
+  names.forEach(function (item, i, arr) {
+    var j = Math.floor(names.length * Math.random());
+    allNames[i] = item + ' ' + surnames[j];
+  });
+
+  playersNames[i] = getElementFromArray(allNames);
+
   return playersNames;
 };
 
 /**
- * Получает случайный цвет плаща
+ * Получает случайный элемент массива
  *
- * @param {array} colorCoat - массив значений цветов плащей.
- * @return {string} coatColor - возвращает значение цвета плаща.
+ * @param {Array} someArray - массив значений.
+ * @return {string} someArray - возвращает случайное значение.
  */
-var getCoatColor = function (colorCoat) {
-  var i = Math.floor(colorCoat.length * Math.random());
-  return coatColor[i];
-};
-
-/**
- * Получает случайный цвет глаз
- *
- * @param {array} colorEyes - массив значений цвета глаз.
- * @return {string} coatColor - возвращает значение цвета глаз.
- */
-var getEyesColor = function (colorEyes) {
-  var i = Math.floor(colorEyes.length * Math.random());
-  return eyesColor[i];
-};
+var getElementFromArray = function (someArray) {
+  var i = Math.floor(someArray.length * Math.random());
+  return someArray[i];
+}
 
 /**
  * Создает массив уникальных волшебников
  *
- * @param {array} names - массив имен.
- * @param {array} surnames - массив фамилий.
- * @param {array} colorCoat - массив значений цветов плащей.
- * @param {array} colorEyes - массив значений цвета глаз.
- * @return {array} wizards - возвращает массив объектов со свойствами: имя, цвет плаща и цвет глаз для каждого волшебника.
+ * @param {Array} colorCoats - массив значений цветов плащей.
+ * @param {Array} colorEyes - массив значений цвета глаз.
+ * @param {number} numberOfPlayers - необходимое количество игроков.
+ * @param {number} i - номер итерации.
+ * @return {Array} wizards - возвращает массив объектов со свойствами: имя, цвет плаща и цвет глаз для каждого волшебника.
  */
-var getWizards = function (names, surnames, colorCoat, colorEyes) {
-  for (var i = 0; i < wizardsNames.length; i++) {
-    var wizard = {
-      name: wizardsNames[i],
-      coatColor: getCoatColor(colorCoat),
-      eyesColor: getEyesColor(colorEyes)
-    };
-    wizards[i] = wizard;
-  }
+var getWizards = function (colorCoats, colorEyes, numberOfPlayers, i) {
+  var wizards = [];
+  var wizard = {
+    name: wizardsNames[i],
+    coatColor: getElementFromArray(colorCoats),
+    eyesColor: getElementFromArray(colorEyes)
+  };
+  wizards[i] = wizard;
   return wizards;
 };
-
-var wizardsNames = getNames(firstNames, lastNames, NUMBER_OF_PLAYERS);
-wizards = getWizards(firstNames, lastNames, coatColor, eyesColor);
-
 
 var similarListElement = document.querySelector('.setup-similar-list');
 var similarWizardTemplate = document.querySelector('#similar-wizard-template')
     .content
     .querySelector('.setup-similar-item');
 
-for (var i = 0; i < wizardsNames.length; i++) {
+for (var i = 0; i < NUMBER_OF_PLAYERS; i++) {
+  var wizardsNames = getNames(FIRST_NAMES, LAST_NAMES, NUMBER_OF_PLAYERS, i);
+  var wizards = getWizards(COAT_COLORS, EYES_COLORS, NUMBER_OF_PLAYERS, i);
   var wizardElement = similarWizardTemplate.cloneNode(true);
   wizardElement.querySelector('.setup-similar-label').textContent = wizardsNames[i];
   wizardElement.querySelector('.wizard-coat').style.fill = wizards[i].coatColor;

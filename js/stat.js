@@ -70,8 +70,8 @@ var renderText = function (ctx, textContent, textX, textY, fontStyle, fontProper
 /**
  * Создает имена игроков
  *
- * @param {object} ctx - контекст canvas.
- * @param {array} names - массив с именами игроков.
+ * @param {Object} ctx - контекст canvas.
+ * @param {Array} names - массив с именами игроков.
  * @param {number} i - номер итерации
  * @param {number} nameX - начальная координата X.
  * @param {number} nameY - начальная координата Y.
@@ -85,8 +85,8 @@ var renderPlayersNames = function (ctx, names, i, nameX, nameY, barWidth, gap) {
 /**
  * Создает времена прохождения для каждого игрока.
  *
- * @param {object} ctx - контекст canvas.
- * @param {array} times - массив времен для каждого из игроков.
+ * @param {Object} ctx - контекст canvas.
+ * @param {Array} times - массив времен для каждого из игроков.
  * @param {number} i - номер итерации
  * @param {number} timesX - начальная координата X.
  * @param {number} timesY - начальная координата Y.
@@ -103,7 +103,7 @@ var renderPlayersTimes = function (ctx, times, i, timesX, timesY, barWidth, gap,
 /**
  * Определяем максимальное время прохождения игры.
  *
- * @param {array} times - массив времен для каждого из игроков.
+ * @param {Array} times - массив времен для каждого из игроков.
  * @return {numder} maxTime - возвращает максимальное время прохождения игры.
  */
 var getMaxTime = function (times) {
@@ -119,9 +119,9 @@ var getMaxTime = function (times) {
 /**
  * Создает гистограммы.
  *
- * @param {object} ctx - контекст canvas.
- * @param {array} names - массив с именами игроков.
- * @param {array} times - массив времен для каждого из игроков.
+ * @param {Object} ctx - контекст canvas.
+ * @param {Array} names - массив с именами игроков.
+ * @param {Array} times - массив времен для каждого из игроков.
  * @param {number} i - номер итерации
  * @param {number} barX - начальная координата X.
  * @param {number} barY - начальная координата Y.
@@ -138,9 +138,9 @@ var renderPlayerBar = function (ctx, names, times, i, barX, barY, barWidth, gap,
 /**
  * Создает облако со статистикой прохождения игры.
  *
- * @param {object} ctx - контекст canvas.
- * @param {array} names - массив с именами игроков.
- * @param {array} times - массив времен для каждого из игроков.
+ * @param {Object} ctx - контекст canvas.
+ * @param {Array} names - массив с именами игроков.
+ * @param {Array} times - массив времен для каждого из игроков.
  */
 window.renderStatistics = function (ctx, names, times) {
   renderCloud(ctx, CLOUD_X, CLOUD_Y, SHADOW_COLOR, CLOUD_SHADOW_GAP, CLOUD_COLOR, CLOUD_WIDTH, CLOUD_HEIGHT);
