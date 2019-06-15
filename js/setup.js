@@ -48,7 +48,7 @@ setup.classList.remove('hidden');
  *
  * @param {Array} names - массив имен.
  * @param {Array} surnames - массив фамилий.
- * @return {Array} playersNames - возвращает массив необходимых имен игроков.
+ * @return {Array} allNames - возвращает массив необходимых имен игроков.
  */
 var getNames = function (names, surnames) {
   var allNames = [];
@@ -65,7 +65,7 @@ var getNames = function (names, surnames) {
  * Получает случайный элемент массива
  *
  * @param {Array} someArray - массив значений.
- * @return {string} someArray - возвращает случайное значение.
+ * @return {string} someArray[i] - возвращает случайное значение.
  */
 var getElementFromArray = function (someArray) {
   var i = Math.floor(someArray.length * Math.random());
@@ -77,19 +77,16 @@ var getElementFromArray = function (someArray) {
  *
  * @param {Array} colorCoats - массив значений цветов плащей.
  * @param {Array} colorEyes - массив значений цвета глаз.
- * @param {number} numberOfPlayers - необходимое количество игроков.
- * @param {number} i - номер итерации.
- * @return {Array} wizards - возвращает массив объектов со свойствами: имя, цвет плаща и цвет глаз для каждого волшебника.
+ * @param {string} wizardName - строка с именем.
+ * @return {Array} wizard - возвращает массив объектов со свойствами: имя, цвет плаща и цвет глаз для каждого волшебника.
  */
-var getWizards = function (colorCoats, colorEyes, numberOfPlayers, i) {
-  var wizards = [];
+var getWizard = function (colorCoats, colorEyes, wizardName) {
   var wizard = {
-    name: allWizardsNames[i],
+    name: wizardName,
     coatColor: getElementFromArray(colorCoats),
     eyesColor: getElementFromArray(colorEyes)
   };
-  wizards[i] = wizard;
-  return wizards;
+  return wizard;
 };
 
 var similarListElement = document.querySelector('.setup-similar-list');
@@ -97,16 +94,36 @@ var similarWizardTemplate = document.querySelector('#similar-wizard-template')
     .content
     .querySelector('.setup-similar-item');
 
-var allWizardsNames = getNames(FIRST_NAMES, LAST_NAMES, NUMBER_OF_PLAYERS, i);
-var playersNames = [];
-for (var i = 0; i < NUMBER_OF_PLAYERS; i++) {
-  playersNames[i] = getElementFromArray(allWizardsNames);
-  var wizards = getWizards(COAT_COLORS, EYES_COLORS, NUMBER_OF_PLAYERS, i);
+var allWizardsNames = getNames(FIRST_NAMES, LAST_NAMES);
+
+/**
+ * Генерирует новый обект на основе клона шаблона волшебника
+ *
+ * @param {number} numberOfplayers - количество игроков.
+ * @param {Array} coatColors - массив значений цветов плащей.
+ * @param {Array} eyesColors - массив значений цвета глаз.
+ * @param {string} wizardName - строка с именем.
+ * @return {Array} wizardElement - возвращает массив объектов со свойствами: имя, цвет плаща и цвет глаз для каждого волшебника.
+ */
+var generateWizard = function (numberOfplayers, coatColors, eyesColors, wizardName) {
+  var wizard = getWizard(coatColors, eyesColors, wizardName);
   var wizardElement = similarWizardTemplate.cloneNode(true);
-  wizardElement.querySelector('.setup-similar-label').textContent = allWizardsNames[i];
-  wizardElement.querySelector('.wizard-coat').style.fill = wizards[i].coatColor;
-  wizardElement.querySelector('.wizard-eyes').style.fill = wizards[i].eyesColor;
+  wizardElement.querySelector('.setup-similar-label').textContent = wizardName;
+  wizardElement.querySelector('.wizard-coat').style.fill = wizard.coatColor;
+  wizardElement.querySelector('.wizard-eyes').style.fill = wizard.eyesColor;
   similarListElement.appendChild(wizardElement);
+
+  return wizardElement;
+};
+var fragment = document.createDocumentFragment();
+
+var renderWizards = function (numberOfPlayers, coatColors, eyesColors, wizardName) {
+  fragment.appendChild(generateWizard(numberOfPlayers, coatColors, eyesColors, wizardName));
+  similarListElement.appendChild(fragment);
+};
+
+for (var i = 0; i < NUMBER_OF_PLAYERS; i++) {
+  renderWizards(NUMBER_OF_PLAYERS, COAT_COLORS, EYES_COLORS, allWizardsNames[i]);
 }
 
 var similarSetup = document.querySelector('.setup-similar');
