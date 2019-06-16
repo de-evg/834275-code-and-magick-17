@@ -1,6 +1,8 @@
 'use strict';
 
 var NUMBER_OF_PLAYERS = 4;
+var ESC__KEYCODE = 27;
+var ENTER__KEYCODE = 13;
 var FIRST_NAMES = [
   'Иван',
   'Хуан Себастьян',
@@ -40,8 +42,20 @@ var EYES_COLORS = [
   'green'
 ];
 
+var FIREBALL_COLORS = [
+  '#ee4830',
+  '#30a8ee',
+  '#5ce6c0',
+  '#e848d5',
+  '#e6e848'
+];
+
 var setup = document.querySelector('.setup');
-setup.classList.remove('hidden');
+var setupOpen = document.querySelector('.setup-open');
+var setupClose = setup.querySelector('.setup-close');
+var playerCoatColor = setup.querySelector('.wizard-coat');
+var playerEyesColor = setup.querySelector('.wizard-eyes');
+var playerFireballColor = setup.querySelector('.setup-fireball-wrap');
 
 /**
  * Создает массив случайных имен и фамилий игроков
@@ -128,3 +142,76 @@ for (var i = 0; i < NUMBER_OF_PLAYERS; i++) {
 
 var similarSetup = document.querySelector('.setup-similar');
 similarSetup.classList.remove('hidden');
+
+// События
+
+/**
+ * Открывает попап
+ */
+var openPopup = function () {
+  setup.classList.remove('hidden');
+  document.addEventListener('keydown', onPopupEscPress);
+  playerCoatColor.addEventListener('click', onCoatClick);
+  playerEyesColor.addEventListener('click', onEyesClick);
+  playerFireballColor.addEventListener('click', onFireballClick);
+};
+
+setupOpen.addEventListener('click', function () {
+  openPopup();
+});
+
+setupOpen.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER__KEYCODE) {
+    openPopup();
+  }
+});
+
+/**
+ * Закрывает попап
+ */
+var closePopup = function () {
+  setup.classList.add('hidden');
+  document.removeEventListener('keydown', onPopupEscPress);
+};
+
+setupClose.addEventListener('click', function () {
+  closePopup();
+});
+
+setupClose.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER__KEYCODE) {
+    closePopup();
+  }
+});
+
+/**
+ * Закрывает попап по нажатию на ESC
+ *
+ * param@ {Object} evt - объект события
+ */
+var onPopupEscPress = function (evt) {
+  if (evt.keyCode === ESC__KEYCODE) {
+    closePopup();
+  }
+};
+
+/**
+ * Меняет рандомно цвет плаща волшебника игрока
+ */
+var onCoatClick = function () {
+  playerCoatColor.style.fill = getElementFromArray(COAT_COLORS);
+};
+
+/**
+ * Меняет рандомно цвет глаз волшебника игрока
+ */
+var onEyesClick = function () {
+  playerEyesColor.style.fill = getElementFromArray(EYES_COLORS);
+};
+
+/**
+ * Меняет рандомно цвет фаербола волшебника игрока
+ */
+var onFireballClick = function () {
+  playerFireballColor.style.background = getElementFromArray(FIREBALL_COLORS);
+};
