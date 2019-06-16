@@ -172,6 +172,9 @@ setupOpen.addEventListener('keydown', function (evt) {
 var closePopup = function () {
   setup.classList.add('hidden');
   document.removeEventListener('keydown', onPopupEscPress);
+  playerCoatColor.removeEventListener('click', onCoatClick);
+  playerEyesColor.removeEventListener('click', onEyesClick);
+  playerFireballColor.removeEventListener('click', onFireballClick);
 };
 
 setupClose.addEventListener('click', function () {
