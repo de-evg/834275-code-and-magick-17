@@ -190,7 +190,7 @@ setupClose.addEventListener('keydown', function (evt) {
 /**
  * Закрывает попап по нажатию на ESC
  *
- * param@ {Object} evt - объект события
+ * @param {Object} evt - объект события
  */
 var onPopupEscPress = function (evt) {
   if (evt.keyCode === ESC__KEYCODE) {
