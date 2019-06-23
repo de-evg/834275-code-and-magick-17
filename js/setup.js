@@ -87,12 +87,12 @@ var getElementFromArray = function (someArray) {
 };
 
 /**
- * Создает массив уникальных волшебников
+ * Создает объект уникального волшебника
  *
  * @param {Array} colorCoats - массив значений цветов плащей.
  * @param {Array} colorEyes - массив значений цвета глаз.
  * @param {string} wizardName - строка с именем.
- * @return {Array} wizard - возвращает массив объектов со свойствами: имя, цвет плаща и цвет глаз для каждого волшебника.
+ * @return {Object} wizard - возвращает массив объектов со свойствами: имя, цвет плаща и цвет глаз для каждого волшебника.
  */
 var getWizard = function (colorCoats, colorEyes, wizardName) {
   var wizard = {
@@ -113,31 +113,33 @@ var allWizardsNames = getNames(FIRST_NAMES, LAST_NAMES);
 /**
  * Генерирует новый обект на основе клона шаблона волшебника
  *
- * @param {number} numberOfplayers - количество игроков.
- * @param {Array} coatColors - массив значений цветов плащей.
- * @param {Array} eyesColors - массив значений цвета глаз.
- * @param {string} wizardName - строка с именем.
- * @return {Array} wizardElement - возвращает массив объектов со свойствами: имя, цвет плаща и цвет глаз для каждого волшебника.
+ * @param {Object} wizard - объект с данными волшебника.
+ * @return {Object} uniqeWizard - возвращает клон шаблона с измененными свойствами: имя, цвет плаща и цвет глаз.
  */
-var generateWizard = function (numberOfplayers, coatColors, eyesColors, wizardName) {
-  var wizard = getWizard(coatColors, eyesColors, wizardName);
-  var wizardElement = similarWizardTemplate.cloneNode(true);
-  wizardElement.querySelector('.setup-similar-label').textContent = wizardName;
-  wizardElement.querySelector('.wizard-coat').style.fill = wizard.coatColor;
-  wizardElement.querySelector('.wizard-eyes').style.fill = wizard.eyesColor;
-  similarListElement.appendChild(wizardElement);
+var cloneTemplateWizard = function (wizard) {
+  var uniqeWizard = similarWizardTemplate.cloneNode(true);
+  uniqeWizard.querySelector('.setup-similar-label').textContent = wizard.wizardName;
+  uniqeWizard.querySelector('.wizard-coat').style.fill = wizard.coatColor;
+  uniqeWizard.querySelector('.wizard-eyes').style.fill = wizard.eyesColor;
+  similarListElement.appendChild(uniqeWizard);
 
-  return wizardElement;
+  return uniqeWizard;
 };
-var fragment = document.createDocumentFragment();
 
-var renderWizards = function (numberOfPlayers, coatColors, eyesColors, wizardName) {
-  fragment.appendChild(generateWizard(numberOfPlayers, coatColors, eyesColors, wizardName));
+/**
+ * Добавляет новый объект в DOM
+ *
+ * @param {Object} wizard - объект с данными волшебника
+ */
+var addWizard = function (wizard) {
+  var fragment = document.createDocumentFragment();
+  fragment.appendChild(cloneTemplateWizard(wizard));
   similarListElement.appendChild(fragment);
 };
 
 for (var i = 0; i < NUMBER_OF_PLAYERS; i++) {
-  renderWizards(NUMBER_OF_PLAYERS, COAT_COLORS, EYES_COLORS, allWizardsNames[i]);
+  var wizard = getWizard(COAT_COLORS, EYES_COLORS, allWizardsNames[i]);
+  addWizard(wizard);
 }
 
 var similarSetup = document.querySelector('.setup-similar');
