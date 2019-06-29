@@ -1,8 +1,10 @@
 'use strict';
 
 (function () {
-  var ESC_KEYCODE = 27;
-  var ENTER_KEYCODE = 13;
+  var KEYCODE = {
+    ESC: 27,
+    ENTER: 13
+  };
 
   var EYES_COLORS = [
     'black',
@@ -38,8 +40,6 @@
   var setup = document.querySelector('.setup');
   var setupOpen = document.querySelector('.setup-open');
   var setupClose = setup.querySelector('.setup-close');
-  var setupUserName = setup.querySelector('.setup-user-name');
-  console.log(setupUserName);
   var playerCoatColor = setup.querySelector('.wizard-coat');
   var playerEyesColor = setup.querySelector('.wizard-eyes');
   var playerFireballColor = setup.querySelector('.setup-fireball');
@@ -63,7 +63,7 @@
   });
 
   setupOpen.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ENTER_KEYCODE) {
+    if (evt.keyCode === KEYCODE.ENTER) {
       openPopup(DefaultStartCoodinate);
     }
   });
@@ -82,7 +82,7 @@
   });
 
   setupClose.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ENTER_KEYCODE) {
+    if (evt.keyCode === KEYCODE.ENTER) {
       closePopup();
     }
   });
@@ -93,7 +93,7 @@
    * @param {Object} evt - объект события
    */
   var onPopupEscPress = function (evt) {
-    if (evt.keyCode === ESC_KEYCODE && !setup.querySelector('.setup-user-name:focus')) {
+    if (evt.keyCode === KEYCODE.ESC && !setup.querySelector('.setup-user-name:focus')) {
       closePopup();
     }
   };
