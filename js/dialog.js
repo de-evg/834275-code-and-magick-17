@@ -1,8 +1,8 @@
 'use strict';
 
 (function () {
-  var ESC__KEYCODE = 27;
-  var ENTER__KEYCODE = 13;
+  var ESC_KEYCODE = 27;
+  var ENTER_KEYCODE = 13;
 
   var EYES_COLORS = [
     'black',
@@ -29,15 +29,17 @@
     '#e6e848'
   ];
 
-  var defaultStartCoodinate = {
-    x: 50,
-    y: 80
+  var DefaultStartCoodinate = {
+    X: 50,
+    Y: 80
   };
   var setupDialogElement = document.querySelector('.setup');
   var dialogHandler = setupDialogElement.querySelector('.upload');
   var setup = document.querySelector('.setup');
   var setupOpen = document.querySelector('.setup-open');
   var setupClose = setup.querySelector('.setup-close');
+  var setupUserName = setup.querySelector('.setup-user-name');
+  console.log(setupUserName);
   var playerCoatColor = setup.querySelector('.wizard-coat');
   var playerEyesColor = setup.querySelector('.wizard-eyes');
   var playerFireballColor = setup.querySelector('.setup-fireball');
@@ -57,12 +59,12 @@
   };
 
   setupOpen.addEventListener('click', function () {
-    openPopup(defaultStartCoodinate);
+    openPopup(DefaultStartCoodinate);
   });
 
   setupOpen.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ENTER__KEYCODE) {
-      openPopup(defaultStartCoodinate);
+    if (evt.keyCode === ENTER_KEYCODE) {
+      openPopup(DefaultStartCoodinate);
     }
   });
 
@@ -80,7 +82,7 @@
   });
 
   setupClose.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ENTER__KEYCODE) {
+    if (evt.keyCode === ENTER_KEYCODE) {
       closePopup();
     }
   });
@@ -91,7 +93,7 @@
    * @param {Object} evt - объект события
    */
   var onPopupEscPress = function (evt) {
-    if (evt.keyCode === ESC__KEYCODE) {
+    if (evt.keyCode === ESC_KEYCODE && !setup.querySelector('.setup-user-name:focus')) {
       closePopup();
     }
   };
@@ -103,14 +105,14 @@
   var onWizardClick = function (evt) {
     switch (evt.target) {
       case playerCoatColor:
-        playerCoatColor.style.fill = utils.getElementFromArray(COAT_COLORS);
+        playerCoatColor.style.fill = utils.elementFromArray(COAT_COLORS);
         break;
       case playerEyesColor:
-        playerEyesColor.style.fill = utils.getElementFromArray(EYES_COLORS);
+        playerEyesColor.style.fill = utils.elementFromArray(EYES_COLORS);
         break;
       case playerFireballColor:
         var fireballColor = evt.target.closest('.setup-fireball-wrap');
-        fireballColor.style.background = utils.getElementFromArray(FIREBALL_COLORS);
+        fireballColor.style.background = utils.elementFromArray(FIREBALL_COLORS);
         break;
     }
   };

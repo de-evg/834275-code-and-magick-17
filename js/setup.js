@@ -73,8 +73,8 @@
   var getWizard = function (colorCoats, colorEyes, wizardName) {
     var wizard = {
       name: wizardName,
-      coatColor: utils.getElementFromArray(colorCoats),
-      eyesColor: utils.getElementFromArray(colorEyes)
+      coatColor: utils.elementFromArray(colorCoats),
+      eyesColor: utils.elementFromArray(colorEyes)
     };
     return wizard;
   };
