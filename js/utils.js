@@ -12,6 +12,6 @@
     return someArray[i];
   };
   window.utils = {
-    getElementFromArray: getElementFromArray
+    elementFromArray: getElementFromArray
   };
 })();
