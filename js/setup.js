@@ -1,90 +1,23 @@
 'use strict';
 
 (function () {
-  var NUMBER_OF_PLAYERS = 4;
-
-  var FIRST_NAMES = [
-    'Иван',
-    'Хуан Себастьян',
-    'Мария',
-    'Кристоф',
-    'Виктор',
-    'Юлия',
-    'Люпита',
-    'Вашингтон'
-  ];
-
-  var LAST_NAMES = [
-    'да Марья',
-    'Верон',
-    'Мирабелла',
-    'Вальц',
-    'Онопко',
-    'Топольницкая',
-    'Нионго',
-    'Ирвинг'
-  ];
-
-  var COAT_COLORS = [
-    'rgb(101, 137, 164)',
-    'rgb(241, 43, 107)',
-    'rgb(146, 100, 161)',
-    'rgb(56, 159, 117)',
-    'rgb(215, 210, 55)',
-    'rgb(0, 0, 0)'
-  ];
-
-  var EYES_COLORS = [
-    'black',
-    'red',
-    'blue',
-    'yellow',
-    'green'
-  ];
 
   var utils = window.utils;
-
-  /**
-   * Создает массив случайных имен и фамилий игроков
-   *
-   * @param {Array} names - массив имен.
-   * @param {Array} surnames - массив фамилий.
-   * @return {Array} allNames - возвращает массив необходимых имен игроков.
-   */
-  var getNames = function (names, surnames) {
-    var allNames = [];
-
-    names.forEach(function (item, i) {
-      var j = Math.floor(names.length * Math.random());
-      allNames[i] = item + ' ' + surnames[j];
-    });
-
-    return allNames;
-  };
-
-  /**
-   * Создает объект уникального волшебника
-   *
-   * @param {Array} colorCoats - массив значений цветов плащей.
-   * @param {Array} colorEyes - массив значений цвета глаз.
-   * @param {string} wizardName - строка с именем.
-   * @return {Object} wizard - возвращает массив объектов со свойствами: имя, цвет плаща и цвет глаз для каждого волшебника.
-   */
-  var getWizard = function (colorCoats, colorEyes, wizardName) {
-    var wizard = {
-      name: wizardName,
-      coatColor: utils.elementFromArray(colorCoats),
-      eyesColor: utils.elementFromArray(colorEyes)
-    };
-    return wizard;
-  };
-
+  var backend = window.backend;
+  var NUMBER_OF_PLAYERS = 4;
   var similarListElement = document.querySelector('.setup-similar-list');
   var similarWizardTemplate = document.querySelector('#similar-wizard-template')
       .content
       .querySelector('.setup-similar-item');
 
-  var allWizardsNames = getNames(FIRST_NAMES, LAST_NAMES);
+  var onLoad = function (loadedData) {
+    var updatedWizards = updateWizards(loadedData);
+    renderWizards(updatedWizards);
+
+  };
+  var onError = function () {
+  };
+  backend.loadData(onLoad, onError);
 
   /**
    * Генерирует новый обект на основе клона шаблона волшебника
@@ -94,29 +27,40 @@
    */
   var cloneTemplateWizard = function (wizard) {
     var uniqeWizard = similarWizardTemplate.cloneNode(true);
-    uniqeWizard.querySelector('.setup-similar-label').textContent = wizard.wizardName;
-    uniqeWizard.querySelector('.wizard-coat').style.fill = wizard.coatColor;
-    uniqeWizard.querySelector('.wizard-eyes').style.fill = wizard.eyesColor;
-    similarListElement.appendChild(uniqeWizard);
+    uniqeWizard.querySelector('.setup-similar-label').textContent = wizard.name;
+    uniqeWizard.querySelector('.wizard-coat').style.fill = wizard.colorCoat;
+    uniqeWizard.querySelector('.wizard-eyes').style.fill = wizard.colorEyes;
 
     return uniqeWizard;
   };
 
   /**
-   * Добавляет новый объект в DOM
+   *  Генерирует массив уникальных волшебников
    *
-   * @param {Object} wizard - объект с данными волшебника
+   * @param {Array} wizardsData - данные волшебников
+   * @return {Array} updatedWizards - массив уникальных волшебников
    */
-  var addWizard = function (wizard) {
-    var fragment = document.createDocumentFragment();
-    fragment.appendChild(cloneTemplateWizard(wizard));
-    similarListElement.appendChild(fragment);
+  var updateWizards = function (wizardsData) {
+    var updateWizardsData = [];
+    for (var i = 0; i < NUMBER_OF_PLAYERS; i++) {
+      var wizard = utils.elementFromArray(wizardsData);
+      updateWizardsData.push(cloneTemplateWizard(wizard));
+    }
+    return updateWizardsData;
   };
 
-  for (var i = 0; i < NUMBER_OF_PLAYERS; i++) {
-    var wizard = getWizard(COAT_COLORS, EYES_COLORS, allWizardsNames[i]);
-    addWizard(wizard);
-  }
+  /**
+   *  Отрисовывает уникальных волшебников
+   *
+   * @param {Array} updatedWizards - массив уникальных волшебников
+   */
+  var renderWizards = function (updatedWizards) {
+    var fragment = document.createDocumentFragment();
+    updatedWizards.forEach(function (updatedWizard) {
+      fragment.appendChild(updatedWizard);
+      similarListElement.appendChild(fragment);
+    });
+  };
 
   var similarSetup = document.querySelector('.setup-similar');
   similarSetup.classList.remove('hidden');
