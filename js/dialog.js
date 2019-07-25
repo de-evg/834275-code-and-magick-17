@@ -1,9 +1,25 @@
 'use strict';
 
 (function () {
+  var utils = window.utils;
+  var stat = window.stat;
+  var backend = window.backend;
   var KEYCODE = {
     ESC: 27,
     ENTER: 13
+  };
+
+  var errorSettings = {
+    WIDTH: '500px',
+    HEIGHT: '100px',
+    BGCOLOR: 'rgb(255, 255, 255)',
+    POSITION: 'absolute',
+    TOP: '50%',
+    LEFT: '50%',
+    TRANSFORM: 'translateX(-50%)',
+    TEXT_ALIGN: 'center',
+    PADDING_TOP: '45px',
+    TEXT: 'Ошибка!'
   };
 
   var EYES_COLORS = [
@@ -35,6 +51,7 @@
     X: 50,
     Y: 80
   };
+  var headerElement = document.querySelector('header');
   var setupDialogElement = document.querySelector('.setup');
   var dialogHandler = setupDialogElement.querySelector('.upload');
   var setup = document.querySelector('.setup');
@@ -43,7 +60,8 @@
   var playerCoatColor = setup.querySelector('.wizard-coat');
   var playerEyesColor = setup.querySelector('.wizard-eyes');
   var playerFireballColor = setup.querySelector('.setup-fireball');
-  var utils = window.utils;
+  var setupWizardForm = setup.querySelector('.setup-wizard-form');
+
 
   /**
    * Открывает попап
@@ -172,5 +190,38 @@
     };
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
+  });
+
+  var onSuccessSubmit = function () {
+    if (headerElement.querySelector('.error')) {
+      headerElement.removeChild(headerElement.querySelector('.error'));
+    }
+    closePopup();
+  };
+
+  var onErrorSubmit = function () {
+    var error = document.createElement('div');
+    error.classList.add('error');
+    error.style.width = errorSettings.WIDTH;
+    error.style.height = errorSettings.HEIGHT;
+    error.style.backgroundColor = errorSettings.BGCOLOR;
+    error.style.position = errorSettings.POSITION;
+    error.style.top = errorSettings.TOP;
+    error.style.left = errorSettings.LEFT;
+    error.style.transform = errorSettings.TRANSFORM;
+    error.style.fontFamily = stat.fontSettings.FAMILY;
+    error.style.fontSize = stat.fontSettings.SIZE;
+    error.style.color = stat.fontSettings.COLOR;
+    error.style.textAlign = errorSettings.TEXT_ALIGN;
+    error.style.paddingTop = errorSettings.PADDING_TOP;
+    error.textContent = errorSettings.TEXT;
+    headerElement.appendChild(error);
+    closePopup();
+  };
+
+  setupWizardForm.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    var formData = new FormData(setupWizardForm);
+    backend.saveData(onSuccessSubmit, onErrorSubmit, formData);
   });
 })();

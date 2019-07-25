@@ -22,6 +22,7 @@
     xhr.send();
   };
 
+
   var save = function (onLoad, onError, data) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
@@ -37,8 +38,10 @@
     });
     xhr.addEventListener('timeout', function () {
       onError();
-      xhr.send(data);
     });
+    xhr.timeout = 10000;
+    xhr.open('POST', 'https://js.dump.academy/code-and-magick');
+    xhr.send(data);
   };
 
   window.backend = {

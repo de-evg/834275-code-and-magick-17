@@ -1,23 +1,34 @@
 'use strict';
 
 (function () {
-  var CLOUD_WIDTH = 420;
-  var CLOUD_HEIGHT = 270;
-  var CLOUD_X = 100;
-  var CLOUD_Y = 10;
-  var CLOUD_SHADOW_GAP = 10;
-  var CLOUD_COLOR = 'rgba(255, 255, 255, 1)';
-  var SHADOW_COLOR = 'rgba(0, 0, 0, 0.7)';
-  var NAME_X = 140;
-  var NAME_Y = 260;
-  var TIMES_X = 140;
-  var TIMES_Y = 240;
-  var FONT_STYLE = 'rgb(0, 0, 0)';
-  var FONT_PROPERTY = '16px "PT Mono"';
+  var Cloud = {
+    WIDTH: 420,
+    HEIGHT: 270,
+    X: 100,
+    Y: 10,
+    SHADOW_GAP: 10,
+    COLOR: 'rgba(255, 255, 255, 1)',
+    SHADOW_COLOR: 'rgba(0, 0, 0, 0.7)'
+  };
+  var NameCoords = {
+    X: 140,
+    Y: 260
+  };
+  var TimesCoords = {
+    X: 140,
+    Y: 240
+  };
+  var Font = {
+    COLOR: 'rgb(0, 0, 0)',
+    SIZE: '16px',
+    FAMILY: 'PT Mono'
+  };
+  var BAR = {
+    WIDTH: 40,
+    X: 140,
+    Y: 240
+  };
   var HISTORGAM_MAX_HEIGHT = 150;
-  var BAR_WIDTH = 40;
-  var BAR_X = 140;
-  var BAR_Y = 240;
   var GAP = 50;
   var TIMES_VERTICAL_GAP = 10;
   var PLAYER_COLOR = 'rgba(255, 0, 0, 1)';
@@ -37,19 +48,12 @@
    * Создает облако
    *
    * @param {object} ctx - контекст canvas.
-   * @param {number} cloudX - начальная координата X.
-   * @param {number} cloudY - начальная координата Y.
-   * @param {string} shadowColor - значение цвета тени в цветовом пространстве rgba.
-   * @param {number} cloudShadowGap - отступ тени.
-   * @param {string} cloudColor - значение цвета облака в цветовом пространстве rgba.
-   * @param {number} cloudWidth - ширина облака.
-   * @param {number} cloudHeight - высота облака.
    */
-  var renderCloud = function (ctx, cloudX, cloudY, shadowColor, cloudShadowGap, cloudColor, cloudWidth, cloudHeight) {
-    ctx.fillStyle = shadowColor;
-    ctx.fillRect(cloudX + cloudShadowGap, cloudY + cloudShadowGap, cloudWidth, cloudHeight);
-    ctx.fillStyle = cloudColor;
-    ctx.fillRect(cloudX, cloudY, cloudWidth, cloudHeight);
+  var renderCloud = function (ctx) {
+    ctx.fillStyle = Cloud.COLOR;
+    ctx.fillRect(Cloud.X + Cloud.SHADOW_GAP, Cloud.Y + Cloud.SHADOW_GAP, Cloud.WIDTH, Cloud.HEIGHT);
+    ctx.fillStyle = Cloud.COLOR;
+    ctx.fillRect(Cloud.X, Cloud.Y, Cloud.WIDTH, Cloud.HEIGHT);
   };
 
   /**
@@ -59,12 +63,10 @@
    * @param {string} textContent - текст, который необходимо отобразить.
    * @param {number} textX - координата X.
    * @param {number} textY - координата Y.
-   * @param {string} fontStyle - цвет текста.
-   * @param {string} fontProperty - параметры текста.
    */
-  var renderText = function (ctx, textContent, textX, textY, fontStyle, fontProperty) {
-    ctx.fillStyle = fontStyle;
-    ctx.font = fontProperty;
+  var renderText = function (ctx, textContent, textX, textY) {
+    ctx.fillStyle = Font.COLOR;
+    ctx.font = Font.SIZE + Font.FAMILY;
     ctx.fillText(textContent, textX, textY);
   };
 
@@ -74,13 +76,9 @@
    * @param {Object} ctx - контекст canvas.
    * @param {Array} names - массив с именами игроков.
    * @param {number} i - номер итерации
-   * @param {number} nameX - начальная координата X.
-   * @param {number} nameY - начальная координата Y.
-   * @param {number} barWidth - ширина бара.
-   * @param {number} gap - отступ бара.
    */
-  var renderPlayersNames = function (ctx, names, i, nameX, nameY, barWidth, gap) {
-    renderText(ctx, names[i], nameX + (barWidth + gap) * i, nameY);
+  var renderPlayersNames = function (ctx, names, i) {
+    renderText(ctx, names[i], NameCoords.X + (BAR.WIDTH + GAP) * i, NameCoords.Y);
   };
 
   /**
@@ -89,16 +87,10 @@
    * @param {Object} ctx - контекст canvas.
    * @param {Array} times - массив времен для каждого из игроков.
    * @param {number} i - номер итерации
-   * @param {number} timesX - начальная координата X.
-   * @param {number} timesY - начальная координата Y.
-   * @param {number} barWidth - ширина бара.
-   * @param {number} gap - отступ бара.
-   * @param {number} histogramMaxHeight - максимальная высота гитограммы.
-   * @param {number} timesVerticalGap - вертикальный отступ.
    */
-  var renderPlayersTimes = function (ctx, times, i, timesX, timesY, barWidth, gap, histogramMaxHeight, timesVerticalGap) {
+  var renderPlayersTimes = function (ctx, times, i) {
     var maxTime = getMaxTime(times);
-    renderText(ctx, Math.floor(times[i]), timesX + (barWidth + gap) * i, timesY - histogramMaxHeight * times[i] / maxTime - timesVerticalGap);
+    renderText(ctx, Math.floor(times[i]), TimesCoords.X + (BAR.WIDTH + GAP) * i, TimesCoords.Y - HISTORGAM_MAX_HEIGHT * times[i] / maxTime - TIMES_VERTICAL_GAP);
   };
 
   /**
@@ -124,16 +116,11 @@
    * @param {Array} names - массив с именами игроков.
    * @param {Array} times - массив времен для каждого из игроков.
    * @param {number} i - номер итерации
-   * @param {number} barX - начальная координата X.
-   * @param {number} barY - начальная координата Y.
-   * @param {number} barWidth - ширина бара.
-   * @param {number} gap - отступ бара.
-   * @param {number} histogramMaxHeight - максимальная высота гитограммы.
    */
-  var renderPlayerBar = function (ctx, names, times, i, barX, barY, barWidth, gap, histogramMaxHeight) {
+  var renderPlayerBar = function (ctx, names, times, i) {
     var maxTime = getMaxTime(times);
     ctx.fillStyle = (names[i] === 'Вы') ? PLAYER_COLOR : anotherColor();
-    ctx.fillRect(barX + (barWidth + gap) * i, barY, barWidth, -histogramMaxHeight * times[i] / maxTime);
+    ctx.fillRect(BAR.X + (BAR.WIDTH + GAP) * i, BAR.Y, BAR.WIDTH, -HISTORGAM_MAX_HEIGHT * times[i] / maxTime);
   };
 
   /**
@@ -144,16 +131,19 @@
    * @param {Array} times - массив времен для каждого из игроков.
    */
   window.renderStatistics = function (ctx, names, times) {
-    renderCloud(ctx, CLOUD_X, CLOUD_Y, SHADOW_COLOR, CLOUD_SHADOW_GAP, CLOUD_COLOR, CLOUD_WIDTH, CLOUD_HEIGHT);
+    renderCloud(ctx);
 
-    renderText(ctx, 'Ура вы победили!', 120, 40, FONT_STYLE, FONT_PROPERTY);
-    renderText(ctx, 'Список результатов:', 120, 60, FONT_STYLE, FONT_PROPERTY);
+    renderText(ctx, 'Ура вы победили!', 120, 40);
+    renderText(ctx, 'Список результатов:', 120, 60);
 
     for (var i = 0; i < times.length; i++) {
-      renderPlayerBar(ctx, names, times, i, BAR_X, BAR_Y, BAR_WIDTH, GAP, HISTORGAM_MAX_HEIGHT);
-      ctx.fillStyle = FONT_STYLE;
-      renderPlayersNames(ctx, names, i, NAME_X, NAME_Y, BAR_WIDTH, GAP);
-      renderPlayersTimes(ctx, times, i, TIMES_X, TIMES_Y, BAR_WIDTH, GAP, HISTORGAM_MAX_HEIGHT, TIMES_VERTICAL_GAP);
+      renderPlayerBar(ctx, names, times, i);
+      ctx.fillStyle = Font.COLOR;
+      renderPlayersNames(ctx, names, i);
+      renderPlayersTimes(ctx, times, i);
     }
+  };
+  window.stat = {
+    fontSettings: Font
   };
 })();
